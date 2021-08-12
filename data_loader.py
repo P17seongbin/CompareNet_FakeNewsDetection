@@ -93,7 +93,7 @@ class DataLoader:
         self.test_data_loader_2 = torch.utils.data.DataLoader(dataset_test_2,
                                 batch_size=params.batch_size, collate_fn=dataset_test_2.collate,shuffle=False)
 
-
+    # TODO: file cannot be accessed via author's download link. ask author of the code about the code.
     def load_adj_and_other(self, path):
         print("Loading {}".format(path))
         if path[-1] == '/':

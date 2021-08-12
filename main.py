@@ -22,6 +22,7 @@ node_type:
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Argument parser for Fake News Detection')
+
     # Data Related
     # data_root_path = '/home/{}/GCN/FND/data/fakeNews/'.format(USERNAME)
     data_root_path = './data/fakeNews/'
@@ -36,6 +37,7 @@ def parse_arguments():
     parser.add_argument("--entity_tran", type=str, help='entity transE embedding path.',
                         default=data_root_path + 'entity_feature_transE.pkl')
     parser.add_argument("--adjs", type=str, default=data_root_path + 'adjs/')
+
     # Hyper-parameters
     parser.add_argument("--emb_dim", type=int, default=100)
     parser.add_argument("--hidden_dim", type=int, default=100)
@@ -46,7 +48,7 @@ def parse_arguments():
     parser.add_argument("--batch_size", type=int, default=32)
     parser.add_argument("--lr", type=float, default=1e-3)
     parser.add_argument("--dropout", type=float, default=0.5)
-    parser.add_argument("--ntags", type=int, default=4)         # 4 or 2
+    parser.add_argument("--ntags", type=int, default=4)         # 4 or 2 (논문에서 제시된 classify tag의 종류, 2개랑 4개 둘 다 진행함)
     parser.add_argument("--weight_decay", type=float, default=1e-6)
     parser.add_argument("--pooling", type=str, default='max',
                         help='Pooling type: "max", "mean", "sum", "att". ')
@@ -57,7 +59,6 @@ def parse_arguments():
                         help='For evaluating a saved model')
     parser.add_argument("--plot", type=int, default=0, help='set to plot attn')
     parser.add_argument("--mode", type=int, default=0, help='0: train&test, 1:test')
-    # parser.add_argument("--cuda", type=bool, default=True, help='use gpu to speed up or not')
     parser.add_argument("--cuda", type=bool, default=True, help='use gpu to speed up or not')
     parser.add_argument("--device", type=int, default=0, help='GPU ID. ')
     parser.add_argument("--HALF", type=bool, default=True, help='Use half tensor to save memory')
@@ -71,15 +72,16 @@ def parse_arguments():
     parser.add_argument('-r', "--repeat", type=int, default=1, help='')
     parser.add_argument('-s', "--seed", type=list, default=[5], help='')
 
+    # make dir for model and check points, etc.
     for dir in ["models/", "ckpt/", "plots/", "result/", "log/"]:
         if not os.path.exists(dir):   os.makedirs(dir)
     args = parser.parse_args()
 
     TIMENOW = (datetime.datetime.utcnow() + datetime.timedelta(hours=8)).strftime("%m%d_%H%M")
-    NODETYPE = {0: "D", 1: "DT", 2: "DE", 3: "DET"}[args.node_type]
+    NODETYPE = {0: "D", 1: "DT", 2: "DE", 3: "DET"}[args.node_type] # D: doc, T: topic, E: entity
     if args.mode == 0:
         MODELNAME = 'CompareNet_{}_{}_{}'.format(args.pooling.capitalize(), NODETYPE, TIMENOW)
-        args.model_file = 'model_{}.t7'.format(MODELNAME)
+        args.model_file = 'model_{}.t7'.format(MODELNAME) # t7 format?
         args.config = MODELNAME
         sys.stdout = Logger("./log/{}_{}.log".format(MODELNAME, TIMENOW))
     else:
@@ -94,17 +96,19 @@ def parse_arguments():
     return args
 
 
-
 def main(params = None):
     if params is None:
         params = parse_arguments()
     SEED = params.seed
     t0 = time.time()
     s_t = timer()
-    dl = DataLoader(params)
 
+    dl = DataLoader(params)
+    # ???
     u = Utils(params, dl)
     timeDelta = int(time.time()-t0)
+
+    # print elapsed precost time.
     print("PreCost:", datetime.timedelta(seconds=timeDelta))
     for repeat in range(params.repeat):
         print("\n\n\n{0} Repeat: {1} {0}".format('-'*27, repeat))
@@ -127,7 +131,7 @@ def main(params = None):
         else:
             raise NotImplementedError("Unknown mode: {}".format(params.mode))
 
-
+# fix random seed to generate same result for same experiments
 def set_seed(seed=9699):
     random.seed(seed)
     np.random.seed(seed)
