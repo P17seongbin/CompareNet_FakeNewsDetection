@@ -14,7 +14,7 @@ class Utils:
     def __init__(self, params, dl):
         self.params = params
         self.data_loader = dl
-        self.HALF = params.HALF
+        self.half = params.half
 
     @staticmethod
     def to_half(arr):
@@ -28,7 +28,7 @@ class Utils:
             return arr
 
     def to_gpu(self, arr, cuda):
-        if self.params.HALF:
+        if self.params.half:
             arr = Utils.to_half(arr)
 
         if not cuda or arr is None:
@@ -75,7 +75,7 @@ class Utils:
 
     def train(self, save_plots_as, pretrained_emb=None):
         model: nn.Module = Classifier(self.params, vocab_size=len(self.data_loader.w2i), pte=pretrained_emb)
-        if self.params.HALF:
+        if self.params.half:
             model.half()
         loss_fn = torch.nn.CrossEntropyLoss()
         if self.params.cuda:
