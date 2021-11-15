@@ -1,4 +1,4 @@
 #!/user/bin/env python
 # -*- coding: utf-8 -*-
 
-from models.classifier import Classifier
+from CompareNet_FakeNewsDetection.models.classifier import Classifier

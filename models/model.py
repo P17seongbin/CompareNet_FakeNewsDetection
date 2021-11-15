@@ -2,7 +2,7 @@ import math
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from models.layer import *
+from CompareNet_FakeNewsDetection.models.layer import *
 from torch.nn.parameter import Parameter
 # from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 from functools import reduce

@@ -1,7 +1,7 @@
 from timeit import default_timer as timer
 import numpy as np
 from tqdm import tqdm
-from models import Classifier
+from CompareNet_FakeNewsDetection.models.classifier import Classifier
 import torch
 import torch.nn as nn
 import torch.optim as optim

@@ -1,12 +1,12 @@
 import os, sys, json, torch
 import argparse, datetime, time
 import random, numpy as np
-from util import Utils
-from data_loader import DataLoader
-from trainer import Trainer
-from evaluator import Evaluator
+from CompareNet_FakeNewsDetection.util import Utils
+from CompareNet_FakeNewsDetection.data_loader import DataLoader
+from CompareNet_FakeNewsDetection.trainer import Trainer
+from CompareNet_FakeNewsDetection.evaluator import Evaluator
 from timeit import default_timer as timer
-from print_log import Logger
+from CompareNet_FakeNewsDetection.print_log import Logger
 from tqdm import tqdm
 
 '''
@@ -16,6 +16,8 @@ node_type:
     '1 represents two types: Document&Topic; \n'
     '0 represents only one type: Document. '
 '''
+
+
 # CUDA_VISIBLE_DEVICES_DICT = {0: '4',    1: '3',     2: '4',     3: '5'}
 # MEMORY_DICT =               {0: 4000,   1: 9500,    2: 7600,    3: 8000}
 
@@ -46,7 +48,7 @@ def parse_arguments():
     parser.add_argument("--batch_size", type=int, default=32)
     parser.add_argument("--lr", type=float, default=1e-3)
     parser.add_argument("--dropout", type=float, default=0.5)
-    parser.add_argument("--ntags", type=int, default=4)         # 4 or 2
+    parser.add_argument("--ntags", type=int, default=4)  # 4 or 2
     parser.add_argument("--weight_decay", type=float, default=1e-6)
     parser.add_argument("--pooling", type=str, default='max',
                         help='Pooling type: "max", "mean", "sum", "att". ')
@@ -94,8 +96,7 @@ def parse_arguments():
     return args
 
 
-
-def main(params = None):
+def comparenet_main(params=None):
     if params is None:
         params = parse_arguments()
     SEED = params.seed
@@ -104,12 +105,12 @@ def main(params = None):
     dl = DataLoader(params)
 
     u = Utils(params, dl)
-    timeDelta = int(time.time()-t0)
+    timeDelta = int(time.time() - t0)
     print("PreCost:", datetime.timedelta(seconds=timeDelta))
     for repeat in range(params.repeat):
-        print("\n\n\n{0} Repeat: {1} {0}".format('-'*27, repeat))
-        set_seed( SEED[repeat] if isinstance(SEED, list) else SEED )
-        print("\n\n\n{0}  Seed: {1}  {0}".format('-'*27, SEED[repeat]))
+        print("\n\n\n{0} Repeat: {1} {0}".format('-' * 27, repeat))
+        set_seed(SEED[repeat] if isinstance(SEED, list) else SEED)
+        print("\n\n\n{0}  Seed: {1}  {0}".format('-' * 27, SEED[repeat]))
         if params.mode == 0:
             # Start training
             trainer = Trainer(params, u)
@@ -136,8 +137,6 @@ def set_seed(seed=9699):
 
 
 if __name__ == '__main__':
-
     params = parse_arguments()
     set_seed(0)
-    main(params)
-
+    comparenet_main(params)

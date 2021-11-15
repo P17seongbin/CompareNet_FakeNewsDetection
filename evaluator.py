@@ -1,5 +1,5 @@
 import torch, json
-from models import Classifier
+from CompareNet_FakeNewsDetection.models import Classifier
 from tqdm import tqdm
 import numpy as np
 from sklearn.metrics import precision_recall_fscore_support

@@ -6,7 +6,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn.parameter import Parameter
 from functools import reduce
-from models.model import HGAT, TextEncoder, EntityEncoder, Pooling, MatchingTransform, GatingMechanism
+from CompareNet_FakeNewsDetection.models.model import HGAT, TextEncoder, EntityEncoder, Pooling, MatchingTransform, GatingMechanism
 import pickle as pkl
 
 class Classifier(nn.Module):
